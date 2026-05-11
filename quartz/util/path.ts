@@ -170,6 +170,9 @@ export function pathToRoot(slug: FullSlug): RelativeURL {
 
 export function resolveRelative(current: FullSlug, target: FullSlug | SimpleSlug): RelativeURL {
   const res = joinSegments(pathToRoot(current), simplifySlug(target as FullSlug)) as RelativeURL
+  if (isFolderPath(target as string) && !res.endsWith("/")) {
+    return (res + "/") as RelativeURL
+  }
   return res
 }
 
