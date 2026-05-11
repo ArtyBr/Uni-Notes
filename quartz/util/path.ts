@@ -102,8 +102,8 @@ export function transformInternalLink(link: string): RelativeURL {
 
   // manually add ext here as we want to not strip 'index' if it has an extension
   const simpleSlug = simplifySlug(slugifyFilePath(fp as FilePath))
-  const joined = joinSegments(stripSlashes(prefix), stripSlashes(simpleSlug))
-  const trail = folderPath ? "/" : ""
+  const joined = joinSegments(stripSlashes(prefix), stripSlashes(simpleSlug, true))
+  const trail = folderPath && !joined.endsWith("/") ? "/" : ""
   const res = (_addRelativeToStart(joined) + trail + anchor) as RelativeURL
   return res
 }
@@ -197,19 +197,14 @@ export function joinSegments(...args: string[]): string {
     return ""
   }
 
-  let joined = args
-    .filter((segment) => segment !== "" && segment !== "/")
-    .map((segment) => stripSlashes(segment))
+  const segments = args.filter((segment) => segment !== "" && segment !== "/")
+  let joined = segments
+    .map((segment, idx) => stripSlashes(segment, idx === segments.length - 1))
     .join("/")
 
   // if the first segment starts with a slash, add it back
   if (args[0].startsWith("/")) {
     joined = "/" + joined
-  }
-
-  // if the last segment is a folder, add a trailing slash
-  if (args[args.length - 1].endsWith("/")) {
-    joined = joined + "/"
   }
 
   return joined
