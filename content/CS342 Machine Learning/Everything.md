@@ -1,0 +1,13 @@
+
+[[Clone/CS342 Machine Learning/1 Introduction]]
+[[2 Mathematical basics]]
+[[3 Decision trees for Classification]]
+[[4 Learning Theory]]
+[[5 Probabilistic Classification]]
+[[6 K-NN - Non-parametric models]]
+[[7 Linear Regression]]
+[[8 Robust Regression]]
+[[9 Clustering - K-means]]
+[[10 PCA and Latent Factor Models]]
+[[11 Linear Classification]]
+[[12 SVMs]]

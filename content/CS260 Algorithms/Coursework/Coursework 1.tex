@@ -1,0 +1,187 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Coursework 1},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Coursework 1}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+a)
+\includegraphics{C:/Users/artem/OneDrive/Documents/Obsidian Vault/Pasted image 20231031202306.png}\\
+b)
+
+\begin{verbatim}
+pothole list = [n1... nk]                       O(1)
+distance covered = 0                            O(1)
+i = 1                                           O(1)
+While i < size of pothole list:                 O(n)
+    current pothole = pothole list[i]           O(1)
+    if current pothole > distance covered:
+        Place a slab with the left end just covering the pothole                                         O(1)
+        distance covered = current pothole + 1  O(1)
+    i = i + 1                                   O(1)
+Copy
+\end{verbatim}
+
+\textbf{Proof}:\\
+Given that every slab has a pothole at its left edge, a suboptimal
+covering of potholes happens in the following cases:\\
+1. A slab is placed that doesn\textquotesingle t cover any potholes\\
+2. 2 slabs cover a range of potholes that are at most 1m apart (They
+could be covered by just 1 slab)\\
+My algorithm doesn\textquotesingle t place a slab in either of these
+cases:\\
+1. My algorithm places slabs only when a pothole is present, placing the
+left edge of the slab on the pothole\\
+2. Slab n only placed if slab n-1 is placed is at least 1m away, and
+since slab n-1 must have a pothole at the left edge of it, the potholes
+covered by slab n must be at least 1m away from this very leftmost
+pothole under slab n-1
+
+Since this basically just iterates through the list of potholes which
+takes O(n) time, with all other operations being O(1), the algorithm
+runs in O(n) time
+
+c)\\
+\includegraphics{C:/Users/artem/OneDrive/Documents/Obsidian Vault/Pasted image 20231031202808.png}\\
+6 Slabs
+
+d)
+
+\begin{enumerate}
+\tightlist
+\item
+  It doesn\textquotesingle t ensure the condition for slab{[}i{]} to be
+  the same as slab{[}i+2{]}
+\item
+  Doing this greedily, like how the AI has done it,
+  doesn\textquotesingle t always return an optimal number of
+  operations.\\
+  For example, if the 3...m slabs were already in an optimal order but
+  the first 2 weren\textquotesingle t, this algorithm would change the
+  color of the first 2 and potentially cause a chain reaction causing it
+  to change the color of all the rest of the slabs, unnecessarily
+\end{enumerate}
+
+e)\\
+Starting arrangement: {[}R, G, B, G, R, Y, P{]}\\
+Final arrangement: {[}R, G, R, G, R, G, R{]}
+
+Count the number of each coloured tile in the even indexes and the odd
+ones. \emph{O(n)}\\
+Choose pair of tile colours, one from each list, whose tallies add up to
+the highest number, but which aren\textquotesingle t the same colour (so
+choose second best pair if both same colour). \emph{O(nlogn)}
+
+Optimal:
+
+Final arrangement of the algorithm colours the tiles is such that:
+
+\begin{itemize}
+\tightlist
+\item
+  There is only one colour in the even tiles
+
+  \begin{itemize}
+  \tightlist
+  \item
+    due to rule that slab{[}i{]} = slab{[}i+2{]}
+  \end{itemize}
+\item
+  There is a different colour in the odd tiles
+
+  \begin{itemize}
+  \tightlist
+  \item
+    due to rule that slab{[}i{]} =/= slab{[}i-1{]}
+  \end{itemize}
+\end{itemize}
+
+An optimal algorithm colours the slabs in this way, and for the even
+colour repaints the least amount of slabs to this colour, and same for
+odd slabs/colour.\\
+This means that the optimal colour we choose to repaint the even slabs
+should be the colour that appears most often in the even spaces in the
+original arrangement, and same for the odd slabs.
+
+Since my algorithm counts the number of slabs painted in each colour in
+the even and odd spaces, and maximises the combination of the two, while
+keeping completeness by only choosing them only if they are different
+colours, it must be optimal.
+
+Time complexity = O(n) + O(nlogn) = O(nlogn)
+
+f)\\
+The algorithm takes an arbitrary array as an input and outputs an
+ordered array with specific conditions to the ordering.\\
+For any algorithm that transforms one such array of elements of size n
+into another such array, the fastest it can possibly be is O(n) as it at
+the least it needs to iterate through the array in order to check that
+it follows the desired conditions.
+
+\end{document}
