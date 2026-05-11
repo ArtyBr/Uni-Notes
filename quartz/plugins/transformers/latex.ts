@@ -28,6 +28,22 @@ export const Latex: QuartzTransformerPlugin<Partial<Options>> = (opts) => {
   const macros = opts?.customMacros ?? {}
   return {
     name: "Latex",
+    textTransform(_ctx, src) {
+      if (engine === "typst") {
+        return src
+      }
+      // Ensure block math ($$) is on its own line
+      // This handles the case where Obsidian users write:
+      // $$
+      // \begin{align}
+      // ...
+      // \end{align}
+      // $$
+      // but without the mandatory newlines around the $$ that Quartz/remark-math expects.
+      return src.replaceAll(/\$\$\s*([\s\S]+?)\s*\$\$/g, (_match, content) => {
+        return `\n\n$$\n${content.trim()}\n$$\n\n`
+      })
+    },
     markdownPlugins() {
       return [remarkMath]
     },
