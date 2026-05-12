@@ -14,16 +14,18 @@ export default ((opts?: Options) => {
     return (
       <footer class={`${displayClass ?? ""}`}>
         <p>
+          notes by <a href="https://www.linkedin.com/in/artemiy-brukhno-84a9101a1/">Artemiy Brukhno</a> |{" "}
+          {Object.entries(links).map(([text, link], index) => (
+            <>
+              <a href={link}>{text}</a>
+              {index < Object.entries(links).length - 1 ? " | " : ""}
+            </>
+          ))}
+        </p>
+        <p>
           {i18n(cfg.locale).components.footer.createdWith}{" "}
           <a href="https://quartz.jzhao.xyz/">Quartz v{version}</a> © {year}
         </p>
-        <ul>
-          {Object.entries(links).map(([text, link]) => (
-            <li>
-              <a href={link}>{text}</a>
-            </li>
-          ))}
-        </ul>
       </footer>
     )
   }
