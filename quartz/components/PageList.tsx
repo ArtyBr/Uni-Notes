@@ -22,7 +22,7 @@ export function byDateAndAlphabetical(cfg: GlobalConfiguration): SortFn {
     // otherwise, sort lexographically by title
     const f1Title = f1.frontmatter?.title.toLowerCase() ?? ""
     const f2Title = f2.frontmatter?.title.toLowerCase() ?? ""
-    return f1Title.localeCompare(f2Title)
+    return f1Title.localeCompare(f2Title, undefined, { numeric: true })
   }
 }
 
@@ -48,7 +48,7 @@ export function byDateAndAlphabeticalFolderFirst(cfg: GlobalConfiguration): Sort
     // otherwise, sort lexographically by title
     const f1Title = f1.frontmatter?.title.toLowerCase() ?? ""
     const f2Title = f2.frontmatter?.title.toLowerCase() ?? ""
-    return f1Title.localeCompare(f2Title)
+    return f1Title.localeCompare(f2Title, undefined, { numeric: true })
   }
 }
 

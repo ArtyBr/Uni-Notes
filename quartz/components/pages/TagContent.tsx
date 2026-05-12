@@ -47,7 +47,7 @@ export default ((opts?: Partial<TagContentOptions>) => {
         ...new Set(
           allFiles.flatMap((data) => data.frontmatter?.tags ?? []).flatMap(getAllSegmentPrefixes),
         ),
-      ].sort((a, b) => a.localeCompare(b))
+      ].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
       const tagItemMap: Map<string, QuartzPluginData[]> = new Map()
       for (const tag of tags) {
         tagItemMap.set(tag, allPagesWithTag(tag))
