@@ -17,7 +17,7 @@ const config: QuartzConfig = {
     },
     locale: "en-US",
     baseUrl: "artybr.github.io/Uni-Notes",
-    ignorePatterns: ["private", "templates", ".obsidian"],
+    ignorePatterns: ["private", "templates", ".obsidian", "**/*.excalidraw*"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",
