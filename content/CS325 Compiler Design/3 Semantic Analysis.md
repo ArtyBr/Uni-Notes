@@ -21,8 +21,8 @@ Will also check if variables are **in scope** and have been **declared** in that
 How can we **implement** semantic analysis?
 
 **Attribute grammars**
-- Augment CFGx with rules to do the semantic checking
-- Also called **atributed** CFGs or **Syntax Directed Definitions (SDDs)**
+- Augment CFGs with rules to do the semantic checking
+- Also called **attributed** CFGs or **Syntax Directed Definitions (SDDs)**
 
 **Translation schemes**
 - Based on attribute grammar ideas but now applied ad-hoc code (**semantic actions**) within production bodies to do the semantic checking
@@ -30,7 +30,7 @@ How can we **implement** semantic analysis?
 
 ### Syntax Directed Definitions
 
-SDDs are when you **attach rules** to **productions**in a grammar
+SDDs are when you **attach rules** to **productions** in a grammar
 
 For example, we consider this example:
 
@@ -41,7 +41,7 @@ For example, we consider this example:
 
 ![[Pasted image 20251027104610.png]]
 
-- e.g. Postfix notation of $(9-5)+2 $is $95-2+$
+- e.g. Postfix notation of $(9-5)+2$ is $95-2+$
 
 Postfix notation can be **defined** as:
 
@@ -86,15 +86,94 @@ So for evaluated arithmetic expressions:
 An SSD that involves **only synthesised attribute** is called **S-attributed**
 - In an S-attributed SDD, each rule computes an attribute for the nonterminal at the **head** of a production from attributes taken **from the body** of the production
 
-We may also need to use **inherited attributed** - attributes at a node that is defined only in terms of attribute values at a **node's parent**, the **node itself** and its **siblings**
+We may also need to use **inherited attributes** - attributes at a node that is defined only in terms of attribute values at a **node's parent**, the **node itself** and its **siblings**
 - An **inherited attribute** for a nonterminal $B$ at a parse-tree node $N$ is defined by a semantic rule associated with the production at the parent of $N$
 - The production must have $B$ as a symbol in its body
 - An inherited attribute at node $N$ is defined only in terms of attribute values at $N'$s  **parents**, $N$ **itself**, and $N$'s **siblings**
 
 ![[Pasted image 20251101114355.png]]
 
+**Dependency graphs** are a tool for determining an evaluation order for the attribute instances in a given parse tree
+- Depicts the **flow of information** among the attribute instances in a given parse tree
+- An edge from one attribute instance to another means that the value of the **first** is *needed* to compute the **second**
+	- Edges express **constraints** implied by the **semantic rules**
+
+![[Pasted image 20260512113833.png]]
+
+Full dependency graph from previous grammar:
+
+![[Pasted image 20260512113919.png]]
 
 
+Such an ordering embeds a directed graph into a **linear order** it is the **topological sort** of the graph
+- If there is any **cycle** in the graph, then there **are no topological sorts**
+	- i.e. there is no way to evaluate the SDD on this parse tree
 
--- TODO: slides 56 - 63
+![[Pasted image 20260512114028.png]]
 
+But if there are **no cycles**, then there is **always at least one topological sort**
+
+Two classes of attribute grammars that **guarantee** an **evaluation order**, as they have *no cycles* in them
+- **S-Attributed definitions**
+	- An attribute grammar is S-attributed if *every attribute* is **synthesised**
+	- With S-attributed definitions, we can evaluate its attributes in **any bottom-up order** of the nodes of the parse tree
+	- Can evaluate the attributes by performing a post-order traversal of the parse tree
+		- Start from the **root** of the parse tree
+		- Evaluate the attributes at a node $N$ when the traversal **leaves $N$ for the last time**
+		- ![[Pasted image 20260512114251.png]]
+		- Postorder corresponds exactly to the order in which an LR parser produces a production body to its head
+		- Can be used to evaluate synthesised attributes and store them on the stack during LR parsing, *without creating* the **tree nodes** *explicitly*
+
+- **L-Attributed definitions**
+	- An attribute grammar is L-attribute if every attribute is *either* **synthesised** *or* **inherited**
+		- But with rules limited such that the dependency-graph edges can go **from left to right** but *not* **right to left** (hence L-attributed)
+		- **specifically** for **inherited attributes**, synthesised attributes can go whichever way
+		- The dependency graph grammar earlier was an L-attributed grammar
+
+With SDDs, the rules are **strictly functional** - they imply no specific order of execution
+- These values are computed by:
+	- Creating a parse tree for the input
+	- Then making a sequence of passes over the parse tree, while evaluating some or all of the rules on each pass
+- Good for specifying a translation, but they have **problems** when actually *implementing* the translations
+	- Essentially this can make the whole attribute grammar large and cumbersome when trying to account for all dependencies while actually creating an implenetation
+
+---
+
+A solution to these problems comes with **Syntax Directed Translations** (SDTs)
+Based on SDDs, where:
+- A CFG is augmented with **program fragments**, called **semantic actions**, *embedded* within production bodies
+- Program fragments can appear *anywhere* within the production body
+- SDTs are more **implementation-oriented** than SDDs - they indicate the **order** in which semantic rules are to be evaluated
+- Typically implemented during parsing, without building a parse tree
+	- In practice implemented together with a **central repository** of facts, aka the **symbol table**
+
+In this example, we perform the action associated with each node as soon as we read it:
+
+![[Pasted image 20260512120108.png]]
+
+First, get the parse tree from the productions
+- Then add the action nodes (which in this case appear after the production's body), we they're added immediately after each node in the tree:
+Second, we **perform** the actions by visiting the nodes in a pre-order traversal, if a node is labelled with an action we perform it.
+
+![[Pasted image 20260512120045.png]]
+
+**All** SDTs can be implemented using a **parse tree**
+- Some can be implemented without a parse tree - directly during either top-down or bottom-up parsing
+- But some of these require a parse tree, as they may need to perform some actions long before it knows whether these symbols will appear in its input
+- Maybe need to use a symbol table to do this without a parse tree
+
+They can also be used to create Intermediate Representations (IRs)
+
+---
+
+**Summary**
+- Attribute Grammars or Syntax Directed Definitions (SDDs) provide the formalism to do context sensitive analysis during parsing
+	- Associate a production with a set of **semantic rules**
+	- Gives a **high-level specification**
+	- But **hide many implementation detials** such as order of evaluation of semantic rules
+- Syntax Directed Translation (SDTs) provide a mechanism to tie **context-sensitive actions** to the parse-time behaviour of the compiler
+	- Uses the same intuitions as the attribute-grammars approach - but more **efficient**
+	- Allows us to add **arbitrary code** in semantic actions
+	- Allows only **one evaluation order**
+	- SDTs are widely support in parser generators
+	- Work well in conjunctions with global data structures such as a symbol table to perform non-local communication
