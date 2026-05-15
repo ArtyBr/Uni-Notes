@@ -13,6 +13,7 @@ export interface ColorScheme {
 interface Colors {
   lightMode: ColorScheme
   darkMode: ColorScheme
+  tertiaryMode?: ColorScheme
 }
 
 export type FontSpecification =
@@ -172,5 +173,18 @@ ${stylesheet.join("\n\n")}
   --highlight: ${theme.colors.darkMode.highlight};
   --textHighlight: ${theme.colors.darkMode.textHighlight};
 }
+
+:root[saved-theme="tertiary"] {
+  --light: ${theme.colors.tertiaryMode?.light ?? theme.colors.darkMode.light};
+  --lightgray: ${theme.colors.tertiaryMode?.lightgray ?? theme.colors.darkMode.lightgray};
+  --gray: ${theme.colors.tertiaryMode?.gray ?? theme.colors.darkMode.gray};
+  --darkgray: ${theme.colors.tertiaryMode?.darkgray ?? theme.colors.darkMode.darkgray};
+  --dark: ${theme.colors.tertiaryMode?.dark ?? theme.colors.darkMode.dark};
+  --secondary: ${theme.colors.tertiaryMode?.secondary ?? theme.colors.darkMode.secondary};
+  --tertiary: ${theme.colors.tertiaryMode?.tertiary ?? theme.colors.darkMode.tertiary};
+  --highlight: ${theme.colors.tertiaryMode?.highlight ?? theme.colors.darkMode.highlight};
+  --textHighlight: ${theme.colors.tertiaryMode?.textHighlight ?? theme.colors.darkMode.textHighlight};
+}
 `
 }
+

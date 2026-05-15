@@ -24,6 +24,10 @@
   color-scheme: dark;
 }
 
+:root[saved-theme="tertiary"] {
+  color-scheme: dark;
+}
+
 :root[saved-theme="light"] {
   color-scheme: light;
 }
@@ -35,6 +39,21 @@
   & > .nightIcon {
     display: inline;
   }
+  & > .tertiaryIcon {
+    display: none;
+  }
+}
+
+:root[saved-theme="tertiary"] .darkmode {
+  & > .dayIcon {
+    display: none;
+  }
+  & > .nightIcon {
+    display: none;
+  }
+  & > .tertiaryIcon {
+    display: inline;
+  }
 }
 
 :root .darkmode {
@@ -42,6 +61,9 @@
     display: inline;
   }
   & > .nightIcon {
+    display: none;
+  }
+  & > .tertiaryIcon {
     display: none;
   }
 }

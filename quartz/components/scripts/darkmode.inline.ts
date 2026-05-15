@@ -11,8 +11,15 @@ const emitThemeChangeEvent = (theme: "light" | "dark") => {
 
 document.addEventListener("nav", () => {
   const switchTheme = () => {
-    const newTheme =
-      document.documentElement.getAttribute("saved-theme") === "dark" ? "light" : "dark"
+    const currentTheme = document.documentElement.getAttribute("saved-theme")
+    let newTheme: "light" | "dark" | "tertiary" = "dark"
+    if (currentTheme === "dark") {
+      newTheme = "tertiary"
+    } else if (currentTheme === "tertiary") {
+      newTheme = "light"
+    } else {
+      newTheme = "dark"
+    }
     document.documentElement.setAttribute("saved-theme", newTheme)
     localStorage.setItem("theme", newTheme)
     emitThemeChangeEvent(newTheme)
